@@ -48,9 +48,6 @@ class _Result {
     }
 
     getopeninghours(sunday, result, 'Sunday');
-    String value;
-    sunday.isNotEmpty ? value = sunday.first.toString() : value = 'not available';
-    print('Sunday:   ' + value);
     getopeninghours(monday, result, 'Monday');
     getopeninghours(tuesday, result, 'Tuesday');
     getopeninghours(wednesday, result, 'Wednesday');
