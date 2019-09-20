@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 //import 'package:cached_network_image/cached_network_image.dart';
-import '../models/item_model.dart';
+import '../models/shop_model.dart';
 import '../blocs/shops_bloc.dart';
+import '../ui/shop_detail.dart';
+import '../blocs/shop_items_bloc_provider.dart';
 
 class ShopList extends StatefulWidget {
   @override
@@ -29,7 +31,7 @@ class _ShopListState extends State<ShopList> {
       ),
       body: StreamBuilder(
         stream: bloc.allshops,
-        builder: (context, AsyncSnapshot<ItemModel> snapshot) {
+        builder: (context, AsyncSnapshot<ShopModel> snapshot) {
           if (snapshot.hasData) {
             return buildList(snapshot);
           } else if (snapshot.hasError) {
@@ -41,36 +43,41 @@ class _ShopListState extends State<ShopList> {
     );
   }
 
-  Widget buildList(AsyncSnapshot<ItemModel> snapshot) {
-    return ListView.builder(
+  Widget buildList(AsyncSnapshot<ShopModel> snapshot) {
+    return ListView.separated(
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
         itemCount: snapshot.data.results.length,
         itemBuilder: (BuildContext context, int index) {
           return shopItem(snapshot, index);
         });
   }
 
-  Widget shopItem(AsyncSnapshot<ItemModel> snapshot, int index) {
+  Widget shopItem(AsyncSnapshot<ShopModel> snapshot, int index) {
     String _logopath = snapshot.data.results[index].logoPath;
-    return Container(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            (_logopath.length > 0)
-                ? Image.network(
-                    snapshot.data.results[index].logoPath.toString(),
-                    height: 100.0,
-                    width: 100.0,
-                  )
-                : Icon(Icons.error, size: 100),
-            shopInfo(snapshot, index)
-          ],
-        ));
+    return GestureDetector(
+      onTap: () => openDetailPage(context, snapshot.data, index),
+      child: Container(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              (_logopath.length > 0)
+                  ? Image.network(
+                      snapshot.data.results[index].logoPath.toString(),
+                      height: 100.0,
+                      width: 100.0,
+                    )
+                  : Icon(Icons.error, size: 100),
+              shopInfo(snapshot, index)
+            ],
+          )),
+    );
   }
 }
 
-Widget shopInfo(AsyncSnapshot<ItemModel> snapshot, int index) {
-  int _id = snapshot.data.results[index].id;
+Widget shopInfo(AsyncSnapshot<ShopModel> snapshot, int index) {
   String _name = snapshot.data.results[index].storename;
   String _address;
   List<String> _addressList = snapshot.data.results[index].address;
@@ -81,17 +88,15 @@ Widget shopInfo(AsyncSnapshot<ItemModel> snapshot, int index) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        (_name.length > 0)
-            ? Text(
-                _name,
-              )
-            : Text('Shop $_id'),
+        Text(
+          _name,
+        ),
         (_decription.length > 0)
             ? Text(
                 _decription.substring(0, 59),
                 overflow: TextOverflow.clip,
               )
-            : Text('Shop description not available'),
+            : Text(_decription),
         (_address.length > 0)
             ? Text(
                 _address,
@@ -100,5 +105,30 @@ Widget shopInfo(AsyncSnapshot<ItemModel> snapshot, int index) {
             : Text('Shop address not available'),
       ],
     ),
+  );
+}
+
+openDetailPage(BuildContext context, ShopModel data, int index) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) {
+      return ShopItemsBlocProvider(
+        child: Shopdetail(
+          id: data.results[index].id,
+          name: data.results[index].name,
+          backgroundPath: data.results[index].backgroud,
+          description: data.results[index].description,
+          logoPath: data.results[index].logo,
+          fridayHours: data.results[index].fridayHours,
+          mondayHours: data.results[index].mondayHours,
+          saturdayHours: data.results[index].saturdayHours,
+          sundayHours: data.results[index].sundayHours,
+          thursdayHours: data.results[index].thursdayHours,
+          tuesdayHours: data.results[index].tuesdayHours,
+          wednesdayHours: data.results[index].wednesdayHours,
+          backgroundColor: data.results[index].color,
+        ),
+      );
+    }),
   );
 }
