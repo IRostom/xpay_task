@@ -171,10 +171,11 @@ class _ShopdetailState extends State<Shopdetail> {
               height: 100.0,
               width: 100.0,
             ),
-            Text(
-              description,
-              overflow: TextOverflow.clip,
-            ),
+            (description.length > 0)
+                ? Text(
+                    description,
+                  )
+                : Text('Description not available'),
           ],
         ),
       ],

@@ -87,7 +87,7 @@ class _Result {
   String get storename => name;
   String get logo => logoPath;
   String get backgroud => backgroudPath;
-  String get description => storeDescription.isEmpty ? "Description not available" : storeDescription;
+  String get description => storeDescription;
   Color get color => backgroundColor;
   List<String> get address => storeAddress;
   List<int> get sundayHours => sunday;

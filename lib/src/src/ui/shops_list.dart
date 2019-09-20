@@ -82,7 +82,7 @@ Widget shopInfo(AsyncSnapshot<ShopModel> snapshot, int index) {
   String _address;
   List<String> _addressList = snapshot.data.results[index].address;
   (_addressList.length > 0) ? _address = _addressList.first : _address = '';
-  String _decription = snapshot.data.results[index].storeDescription;
+  String _description = snapshot.data.results[index].storeDescription;
 
   return Expanded(
     child: Column(
@@ -91,16 +91,14 @@ Widget shopInfo(AsyncSnapshot<ShopModel> snapshot, int index) {
         Text(
           _name,
         ),
-        (_decription.length > 0)
+        (_description.length > 0)
             ? Text(
-                _decription.substring(0, 59),
-                overflow: TextOverflow.clip,
+                _description.substring(0, 59),
               )
-            : Text(_decription),
+            : Text('Description not available'),
         (_address.length > 0)
             ? Text(
                 _address,
-                //overflow: TextOverflow.clip,
               )
             : Text('Shop address not available'),
       ],
