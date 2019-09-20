@@ -7,4 +7,5 @@ A simple flutter app that retreives and displays data from this [API](https://ap
 2. Clone / pull `https://github.com/IRostom/xpay_task.git`
 3. cd to the repo directory
 3. Run `flutter pub get`
-4. Run  `flutter run`
+4. Connect your device
+5. Run  `flutter run`
